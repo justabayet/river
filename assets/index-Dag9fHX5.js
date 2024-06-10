@@ -39,9 +39,10 @@ void main()
   float waves = sin(waveFrequencyNoise * 5.0 + worldUv.y * 20.0 + time * 6.0 * currentSpeed) * wavesSizeFactor;
   newPos.z += waves;
 
-  float riddles = ((texture(perlinTexture, vec2(uv.x, uv.y + time * currentSpeed)) - 0.5).x) / 10.0;
-  float riddlesFactor = smoothstep(0.9, 0.5, uv.x) * smoothstep(0.1, 0.5, uv.x);
-  newPos.z += riddles * riddlesFactor;
+  float riddles = (texture(perlinTexture, vec2(uv.x, uv.y + time * currentSpeed)).x  - 0.25) / 10.0;
+  float riddlesBoundaries = smoothstep(0.9, 0.5, uv.x) * smoothstep(0.1, 0.5, uv.x);
+  float riddleElevation = riddles * riddlesBoundaries;
+  newPos.z += riddleElevation;
 
   float leftness = 1.0 - clamp(uv.x, 0.0, 0.5) * 2.0;
   float isLeft = step(0.5, 1.0 - uv.x);
@@ -80,10 +81,13 @@ void main()
 {
     float heightFactor = (vPos.z + 0.1) * 5.0;
 
+    vec3 white = vec3(1.0, 1.0, 1.0);
+
     vec3 water = mix(depthColor, surfaceColor, heightFactor);
-    vec3 foam = vec3(1.0, 1.0, 1.0);
+    vec3 foam = white;
 
     vec3 color = mix(water, foam, smoothstep(0.55, 0.6, heightGroundEdge));
+
     gl_FragColor = vec4(color, .8);
     
     #include <colorspace_fragment>;
