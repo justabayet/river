@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 // import { Perf } from 'r3f-perf'
 import Experience from './App/Experience'
 import { KeyboardControls } from '@react-three/drei'
+import { Leva } from 'leva'
 
 function App(): JSX.Element {
   return (
@@ -22,6 +23,8 @@ function App(): JSX.Element {
 
         {/* <Perf position="top-left" /> */}
       </Canvas>
+
+      <Leva collapsed />
     </KeyboardControls>
   )
 }
