@@ -1,7 +1,7 @@
 import { MeshProps, ReactThreeFiber, extend, useFrame } from '@react-three/fiber'
 import bedVertexShader from './shaders/bed/vertex.glsl'
 import bedFragmentShader from './shaders/bed/fragment.glsl'
-import { shaderMaterial, useTexture } from '@react-three/drei'
+import { shaderMaterial, useKeyboardControls, useTexture } from '@react-three/drei'
 import { ShaderMaterial, Texture, Color, RepeatWrapping, Vector2 } from 'three'
 import { useRef } from 'react'
 import { useControls } from 'leva'
@@ -66,19 +66,12 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
   })
 
   const {
-    characterPositionY,
     bedWidthFactor,
     bedMinWidthFactor,
     bedGroundColor,
     bedBottomColor,
     heightDryGround
   } = useControls({
-    characterPositionY: {
-      value: shaderDefault.characterPosition.y,
-      min: -100,
-      max: 100,
-      step: 0.1,
-    },
     bedWidthFactor: shaderDefault.bedWidthFactor,
     bedMinWidthFactor: shaderDefault.bedMinWidthFactor,
     bedGroundColor: `#${shaderDefault.bedGroundColor.getHexString()}`,
@@ -86,9 +79,21 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
     heightDryGround: shaderDefault.heightDryGround
   })
 
-  useFrame(({ clock }) => {
+  const [, getKeys] = useKeyboardControls()
+
+  useFrame(({ clock }, delta) => {
     if (bedMaterial.current != null) {
       bedMaterial.current.time = clock.elapsedTime
+
+      const { forward, backward } = getKeys()
+
+      const distanceDelta = delta * 3.0
+
+      if (forward) {
+        bedMaterial.current.characterPosition.y += distanceDelta
+      } else if (backward) {
+        bedMaterial.current.characterPosition.y -= distanceDelta
+      }
     }
   })
 
@@ -98,7 +103,6 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
       <bedMaterial
         ref={bedMaterial}
         perlinTexture={perlinTexture}
-        characterPosition={new Vector2(0, characterPositionY)}
         bedWidthFactor={bedWidthFactor}
         bedMinWidthFactor={bedMinWidthFactor}
         groundSize={width}

@@ -1,7 +1,7 @@
 import { MeshProps, ReactThreeFiber, extend, useFrame } from '@react-three/fiber'
 import riverVertexShader from './shaders/river/vertex.glsl'
 import riverFragmentShader from './shaders/river/fragment.glsl'
-import { shaderMaterial, useTexture } from '@react-three/drei'
+import { shaderMaterial, useKeyboardControls, useTexture } from '@react-three/drei'
 import { ShaderMaterial, Texture, Color, RepeatWrapping, Vector2 } from 'three'
 import { useRef } from 'react'
 import { useControls } from 'leva'
@@ -64,19 +64,12 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
   })
 
   const {
-    characterPositionY,
     riverWidthFactor,
     riverMinWidthFactor,
     surfaceColor,
     depthColor,
     heightDryGround
   } = useControls({
-    characterPositionY: {
-      value: shaderDefault.characterPosition.y,
-      min: -100,
-      max: 100,
-      step: 0.1,
-    },
     riverWidthFactor: shaderDefault.riverWidthFactor,
     riverMinWidthFactor: shaderDefault.riverMinWidthFactor,
     surfaceColor: `#${shaderDefault.surfaceColor.getHexString()}`,
@@ -84,11 +77,25 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
     heightDryGround: shaderDefault.heightDryGround
   })
 
-  useFrame(({ clock }) => {
+
+  const [, getKeys] = useKeyboardControls()
+
+  useFrame(({ clock }, delta) => {
     if (riverMaterial.current != null) {
       riverMaterial.current.time = clock.elapsedTime
+
+      const { forward, backward } = getKeys()
+
+      const distanceDelta = delta * 3.0
+
+      if (forward) {
+        riverMaterial.current.characterPosition.y += distanceDelta
+      } else if (backward) {
+        riverMaterial.current.characterPosition.y -= distanceDelta
+      }
     }
   })
+
 
   return (
     <mesh {...props} rotation={[- Math.PI / 2, 0, 0]}>
@@ -96,7 +103,6 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
       <riverMaterial
         ref={riverMaterial}
         perlinTexture={perlinTexture}
-        characterPosition={new Vector2(0, characterPositionY)}
         riverWidthFactor={riverWidthFactor}
         riverMinWidthFactor={riverMinWidthFactor}
         groundSize={width}

@@ -6,7 +6,7 @@ varying float heightFactor;
 
 void main()
 {
-    vec3 color = mix(bedBottomColor, bedGroundColor, heightFactor);
-    gl_FragColor = vec4(color, .8);
+    vec3 color = mix(bedBottomColor, bedGroundColor, pow(heightFactor, 2.0));
+    gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>;
 }
