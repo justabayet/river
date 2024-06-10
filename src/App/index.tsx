@@ -10,7 +10,7 @@ function App(): JSX.Element {
         fov: 45,
         near: 0.1,
         far: 200,
-        position: [-10, 6, 6]
+        position: [3, 3, 10]
       }} >
       <Experience />
       <OrbitControls maxPolarAngle={(Math.PI / 2) - Math.PI / 20} />
