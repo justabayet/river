@@ -1,7 +1,7 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 // import { Perf } from 'r3f-perf'
-import Experience from './Experience'
+import Experience from './App/Experience'
 
 function App(): JSX.Element {
   return (

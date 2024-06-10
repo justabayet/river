@@ -15,10 +15,11 @@ interface RiverMaterial extends ShaderMaterial {
   characterPosition: Vector2
   riverWidthFactor: number
   riverMinWidthFactor: number
+  heightDryGround: number
 }
 
-const defaultSurfaceColor = new Color(0.3, .0, 1.0)
-const defaultDepthColor = new Color(1.0, .7, 1.0)
+const defaultSurfaceColor = new Color(0, .7, 1.0)
+const defaultDepthColor = new Color(0, .3, 1.0)
 
 const shaderDefault = {
   time: 0,
@@ -28,7 +29,8 @@ const shaderDefault = {
   groundSize: 1,
   characterPosition: new Vector2(),
   riverWidthFactor: 5,
-  riverMinWidthFactor: 0.5
+  riverMinWidthFactor: 0.5,
+  heightDryGround: 0.4
 }
 
 const RiverMaterial = shaderMaterial(
@@ -66,7 +68,8 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
     riverWidthFactor,
     riverMinWidthFactor,
     surfaceColor,
-    depthColor
+    depthColor,
+    heightDryGround
   } = useControls({
     characterPositionY: {
       value: shaderDefault.characterPosition.y,
@@ -77,7 +80,8 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
     riverWidthFactor: shaderDefault.riverWidthFactor,
     riverMinWidthFactor: shaderDefault.riverMinWidthFactor,
     surfaceColor: `#${shaderDefault.surfaceColor.getHexString()}`,
-    depthColor: `#${shaderDefault.depthColor.getHexString()}`
+    depthColor: `#${shaderDefault.depthColor.getHexString()}`,
+    heightDryGround: shaderDefault.heightDryGround
   })
 
   useFrame(({ clock }) => {
@@ -98,7 +102,10 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
         groundSize={width}
         surfaceColor={surfaceColor}
         depthColor={depthColor}
-        wireframe
+        heightDryGround={heightDryGround}
+        transparent
+        opacity={0.7}
+      // wireframe
       />
     </mesh>
   )
