@@ -17,9 +17,8 @@ varying vec2 vUv;
 #define LEFT_EDGE_SEED 0.1
 #define RIGHT_EDGE_SEED 0.2
 
-float getEdgeOffset(float seed) {
-  vec2 worldUv = uv + (characterPosition / 5.0);
-  float edgePerlinX = worldUv.y / 10.0;
+float getEdgeOffset(float seed, vec2 worldUv) {
+  float edgePerlinX = worldUv.y / 70.0;
 
   float offsetFactor = texture(perlinTexture, vec2(edgePerlinX, seed)).r
     * bedWidthFactor;
@@ -31,19 +30,21 @@ void main()
 {
   vec4 newPos = vec4(position, 1.0);
 
-  vec2 worldUv = uv + (characterPosition / 5.0);
+  vec4 worldPos = modelMatrix * newPos;
+
+  vec2 worldUv = worldPos.xz + (characterPosition / 5.0);
+
   float heightOffset = sin(worldUv.y * 20.0 + time * 2.0)
     / 10.0; // [-0.1, 0.1]
   // newPos.z += heightOffset;
 
   float leftness = 1.0 - clamp(uv.x, 0.0, 0.5) * 2.0;
   float isLeft = step(0.5, 1.0 - uv.x);
-  newPos.x += getEdgeOffset(LEFT_EDGE_SEED) * leftness;
-  // newPos.x -= 0.5 * leftness;
+  newPos.x += getEdgeOffset(LEFT_EDGE_SEED, worldUv) * leftness;
 
   float rightness = (clamp(uv.x, 0.5, 1.0) - 0.5) * 2.0;
   float isRight = step(0.5, uv.x);
-  newPos.x += getEdgeOffset(RIGHT_EDGE_SEED) * rightness;
+  newPos.x += getEdgeOffset(RIGHT_EDGE_SEED, worldUv) * rightness;
 
   heightGroundOffset = 
     dryGroundElevation * pow(smoothstep(0.0, 1.0, leftness), 3.0) +

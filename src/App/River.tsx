@@ -88,7 +88,7 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
 
       const { forward, backward } = getKeys()
 
-      const distanceDelta = delta * 3.0
+      const distanceDelta = delta * 20.0
 
       if (forward) {
         riverMaterial.current.characterPosition.y += distanceDelta
