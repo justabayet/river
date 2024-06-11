@@ -5,8 +5,11 @@ uniform float tileSize;
 uniform vec2 characterPosition;
 uniform float bedWidthFactor;
 uniform float bedMinWidthFactor;
-uniform float heightDryGround;
+uniform float dryGroundElevation;
 
+varying float heightGroundOffset;
+varying float waterHeight;
+varying float diffHeight;
 varying float heightFactor;
 varying vec3 uPos;
 varying vec2 vUv;
@@ -42,11 +45,15 @@ void main()
   float isRight = step(0.5, uv.x);
   newPos.x += getEdgeOffset(RIGHT_EDGE_SEED) * rightness;
 
-  float heightGroundOffset = 
-    heightDryGround * pow(smoothstep(0.0, 1.0, leftness), 3.0) +
-    heightDryGround * pow(smoothstep(0.0, 1.0, rightness), 3.0);
+  heightGroundOffset = 
+    dryGroundElevation * pow(smoothstep(0.0, 1.0, leftness), 3.0) +
+    dryGroundElevation * pow(smoothstep(0.0, 1.0, rightness), 3.0);
 
   newPos.z += heightGroundOffset;
+
+  float waterHeighFactor = 0.3;
+  waterHeight = heightGroundOffset * waterHeighFactor;
+  diffHeight = waterHeight - heightGroundOffset;
 
   float isFirst = 1.0 - step(0.01, uv.x);
   newPos.x += (- newPos.x - tileSize / 2.0) * isLeft * isFirst;
@@ -54,7 +61,7 @@ void main()
   float isLast = step(0.99, uv.x);
   newPos.x += (- newPos.x + tileSize / 2.0) * isRight * isLast;
 
-  heightFactor = heightGroundOffset / heightDryGround;
+  heightFactor = heightGroundOffset / dryGroundElevation;
 
   vec4 modelPosition = modelMatrix * newPos;
   vec4 viewPosition = viewMatrix * modelPosition;

@@ -15,7 +15,7 @@ interface BedMaterial extends ShaderMaterial {
   characterPosition: Vector2
   bedWidthFactor: number
   bedMinWidthFactor: number
-  heightDryGround: number
+  dryGroundElevation: number
   tileSize: number
 }
 
@@ -31,7 +31,7 @@ const shaderDefault = {
   characterPosition: new Vector2(),
   bedWidthFactor: 5,
   bedMinWidthFactor: 0.5,
-  heightDryGround: 0.4,
+  dryGroundElevation: 0.4,
   tileSize: 0
 }
 
@@ -70,13 +70,13 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
     bedMinWidthFactor,
     bedGroundColor,
     bedBottomColor,
-    heightDryGround
+    dryGroundElevation
   } = useControls({
     bedWidthFactor: shaderDefault.bedWidthFactor,
     bedMinWidthFactor: shaderDefault.bedMinWidthFactor,
     bedGroundColor: `#${shaderDefault.bedGroundColor.getHexString()}`,
     bedBottomColor: `#${shaderDefault.bedBottomColor.getHexString()}`,
-    heightDryGround: shaderDefault.heightDryGround
+    dryGroundElevation: shaderDefault.dryGroundElevation
   })
 
   const [, getKeys] = useKeyboardControls()
@@ -108,7 +108,7 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
         groundSize={width}
         bedGroundColor={bedGroundColor}
         bedBottomColor={bedBottomColor}
-        heightDryGround={heightDryGround}
+        dryGroundElevation={dryGroundElevation}
         tileSize={size}
       // wireframe
       />
