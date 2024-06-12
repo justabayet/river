@@ -101,7 +101,7 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
 
   return (
     <mesh {...props} rotation={[- Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[width, size, 20, 20]} />
+      <planeGeometry args={[width, size, 10, 10]} />
       <riverMaterial
         ref={riverMaterial}
         perlinTexture={perlinTexture}

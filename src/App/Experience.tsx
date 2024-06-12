@@ -8,6 +8,14 @@ function Experience(): JSX.Element {
   return (
     <group position={[0, 0, 0]}>
 
+      <group position={[-5, -0.1, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <River size={groundSize} position={[0, 0.3, 0]} />
+        <Bed size={groundSize} position={[0, 0.1, 0]} />
+      </group>
+      <group position={[-10, -0.1, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <River size={groundSize} position={[0, 0.3, 0]} />
+        <Bed size={groundSize} position={[0, 0.1, 0]} />
+      </group>
       <group position={[0, -0.1, -5]}>
         <River size={groundSize} position={[0, 0.3, 0]} />
         <Bed size={groundSize} position={[0, 0.1, 0]} />

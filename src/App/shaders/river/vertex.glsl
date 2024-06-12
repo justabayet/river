@@ -10,6 +10,7 @@ uniform float dryGroundElevation;
 uniform float riverHeight;
 varying float dryGroundOffset;
 varying float edgeElevation;
+varying float riddleElevation;
 varying vec3 vPos;
 varying vec2 vUv;
 varying vec3 vWorldPos;
@@ -49,7 +50,7 @@ void main()
   float speed = 1.0;
 
   float waveSizeFactor = 1.0 / 100.0;
-  float waveFrequencyNoise = texture(perlinTexture, vec2(uv.y, WAVES_SEED)).r;
+  float waveFrequencyNoise = texture(perlinTexture, vec2(worldUv.y, WAVES_SEED)).r;
   float waveFrequency = 0.5;
 
   float waves = sin((
@@ -58,14 +59,20 @@ void main()
     time * 6.0 * speed) * waveFrequency) * waveSizeFactor;
   newPos.z += waves;
 
-  float riddleFactor = 1.0 / 50.0;
-  float perlinCombi = (texture(perlinTexture,vec2(worldUv.x + time / 100.0, worldUv.y + time * speed) / 7.0).x * 2.0);
-  float riddleRandom = snoise(vec2(worldUv.x * 2.0, worldUv.y * .5 + time));// * perlinCombi;
+  float riddleFactor = 1.0 / 30.0;
+  float riddleRandom = snoise(vec2(worldUv.x * 2.0, worldUv.y * .5 + time));
   float riddle = riddleRandom * riddleFactor;
   float riddleBoundaries = smoothstep(0.9, 0.5, uv.x) * smoothstep(0.1, 0.5, uv.x);
-  float riddleElevation = 
-    riddle * step(0.5, 1.0 - leftness) * isLeft +
-    riddle * step(0.5, 1.0 - rightness) * isRight;
+
+  float riddleFrequencyNoise = texture(
+    perlinTexture,
+    vec2((worldUv.y + time * speed) / 20.0, WAVES_SEED)).r;
+  riddle += (riddleFrequencyNoise - 0.25) * 0.1;
+
+  riddleElevation = 
+    riddle * smoothstep(0.35, 0.5, 1.0 - leftness) * isLeft +
+    riddle * smoothstep(0.35, 0.5, 1.0 - rightness) * isRight;
+
   newPos.z += riddleElevation;
 
   float edgeElevationFactor = 0.3;
