@@ -20,8 +20,9 @@ varying vec3 vWorldPos;
 
 float getEdgeOffset(float seed, vec2 worldUv) {
   float edgePerlinX = worldUv.y / 70.0;
+  float edgePerlinY = worldUv.x / 70.0;
 
-  float offsetFactor = texture(perlinTexture, vec2(edgePerlinX, seed)).r
+  float offsetFactor = texture(perlinTexture, vec2((edgePerlinX + edgePerlinY) / 2.0, seed)).r
     * riverWidthFactor;
 
   return (position.x * riverMinWidthFactor) - position.x + (position.x * offsetFactor);

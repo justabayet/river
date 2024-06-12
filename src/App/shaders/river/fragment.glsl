@@ -4,7 +4,7 @@ varying vec2 vUv;
 varying vec3 vPos;
 varying float dryGroundOffset;
 varying float edgeElevation;
-
+varying vec3 vWorldPos;
 void main()
 {
     float edgeness = 0.5 + dryGroundOffset - edgeElevation;
@@ -23,5 +23,7 @@ void main()
     color = mix(color, ground, isGround);
 
     gl_FragColor = vec4(color, .8);
+    // gl_FragColor = vec4(vUv, 1.0, .8);
+    // gl_FragColor = vec4(vWorldPos.xz, 1.0, 1.0);
     #include <colorspace_fragment>;
 }
