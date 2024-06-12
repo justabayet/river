@@ -6,6 +6,9 @@ varying float dryGroundOffset;
 varying float edgeElevation;
 varying vec3 vWorldPos;
 varying float riddleElevation;
+uniform vec3 bedGroundColor;
+uniform vec3 bedBottomColor;
+varying float dryGroundHeightFactor;
 
 void main()
 {
@@ -13,10 +16,10 @@ void main()
     float heightFactor = (vPos.z + 0.1) * 5.0;
 
     vec3 white = vec3(1.0, 1.0, 1.0);
-    vec3 ground = vec3(1.0, 0.37, 0.22);
+    vec3 ground = mix(bedBottomColor, bedGroundColor, pow(dryGroundHeightFactor, 2.0));
 
     vec3 water = mix(depthColor, surfaceColor, heightFactor);
-    vec3 foam = white;
+    vec3 foam = mix(water, white, 0.3);
 
     float isFoam = smoothstep(0.4, 0.45, edgeness);
     float isGround = smoothstep(0.49, 0.5, edgeness);

@@ -8,6 +8,8 @@ import { useControls } from 'leva'
 
 interface RiverMaterial extends ShaderMaterial {
   time: number
+  bedGroundColor: Color
+  bedBottomColor: Color
   surfaceColor: Color
   depthColor: Color
   perlinTexture: Texture
@@ -21,9 +23,13 @@ interface RiverMaterial extends ShaderMaterial {
 
 const defaultSurfaceColor = new Color(0, .7, 1.0)
 const defaultDepthColor = new Color(0, .3, 1.0)
+const defaultBedGroundColor = new Color(0xffcb7e)
+const defaultBedBottomColor = new Color(0xff0000)
 
 const shaderDefault = {
   time: 0,
+  bedGroundColor: defaultBedGroundColor,
+  bedBottomColor: defaultBedBottomColor,
   surfaceColor: defaultSurfaceColor,
   depthColor: defaultDepthColor,
   perlinTexture: null,
@@ -70,12 +76,16 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
     riverMinWidthFactor,
     surfaceColor,
     depthColor,
-    dryGroundElevation
+    dryGroundElevation,
+    bedGroundColor,
+    bedBottomColor,
   } = useControls({
     riverWidthFactor: shaderDefault.riverWidthFactor,
     riverMinWidthFactor: shaderDefault.riverMinWidthFactor,
     surfaceColor: `#${shaderDefault.surfaceColor.getHexString()}`,
     depthColor: `#${shaderDefault.depthColor.getHexString()}`,
+    bedGroundColor: `#${shaderDefault.bedGroundColor.getHexString()}`,
+    bedBottomColor: `#${shaderDefault.bedBottomColor.getHexString()}`,
     dryGroundElevation: shaderDefault.dryGroundElevation
   })
 
@@ -111,6 +121,8 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
         surfaceColor={surfaceColor}
         depthColor={depthColor}
         dryGroundElevation={dryGroundElevation}
+        bedGroundColor={bedGroundColor}
+        bedBottomColor={bedBottomColor}
         transparent
         opacity={0.7}
       // wireframe

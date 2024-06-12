@@ -14,6 +14,7 @@ varying float riddleElevation;
 varying vec3 vPos;
 varying vec2 vUv;
 varying vec3 vWorldPos;
+varying float dryGroundHeightFactor;
 
 #define LEFT_EDGE_SEED 0.1
 #define RIGHT_EDGE_SEED 0.2
@@ -84,6 +85,7 @@ void main()
   dryGroundOffset = 
     dryGroundElevation * pow(smoothstep(0.0, 1.0, leftness), 3.0) +
     dryGroundElevation * pow(smoothstep(0.0, 1.0, rightness), 3.0);
+  dryGroundHeightFactor = dryGroundOffset / dryGroundElevation;
 
   float edgeElevationOffset = dryGroundOffset * edgeElevationFactor;
   
