@@ -29,6 +29,10 @@ float getEdgeOffset(float seed, vec2 worldUv) {
   return (position.x * riverMinWidthFactor) - position.x + (position.x * offsetFactor);
 }
 
+float spikeSin(float sinX) {
+  return 1.0 - abs(sin(sinX));
+}
+
 void main()
 {
   vec4 newPos = vec4(position, 1.0);
@@ -53,7 +57,7 @@ void main()
   float waveFrequencyNoise = texture(perlinTexture, vec2(worldUv.y, WAVES_SEED)).r;
   float waveFrequency = 0.5;
 
-  float waves = sin((
+  float waves = spikeSin((
     waveFrequencyNoise * 5.0 + 
     worldUv.y * 1.0 + 
     time * 6.0 * speed) * waveFrequency) * waveSizeFactor;
