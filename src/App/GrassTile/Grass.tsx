@@ -181,7 +181,7 @@ function Grass({ groundSize, textureInteractionX, textureInteractionY, instances
 
   return (
     <instancedMesh {...props} ref={blades} args={[undefined, undefined, instances.length]}>
-      <TrianglePlaneGeometry nbVSegments={nbVSegments} width={0.5} height={0.5} />
+      <TrianglePlaneGeometry nbVSegments={nbVSegments} width={0.1} height={0.2} />
       <grassMaterial
         ref={grassMaterial}
         side={DoubleSide}

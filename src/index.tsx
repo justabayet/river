@@ -16,10 +16,11 @@ function App(): JSX.Element {
           fov: 45,
           near: 0.1,
           far: 200,
-          position: [3, 3, 10]
+          position: [-7, 5, 5]
         }} >
         <Experience />
-        <OrbitControls maxPolarAngle={(Math.PI / 2) - Math.PI / 20} />
+        {/* <OrbitControls maxPolarAngle={(Math.PI / 2) - Math.PI / 20} /> */}
+        <OrbitControls autoRotate autoRotateSpeed={-1.4} />
 
         {/* <Perf position="top-left" /> */}
       </Canvas>

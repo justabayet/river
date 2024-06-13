@@ -19,7 +19,6 @@ void main()
   float oscillation = uniqueOffset * pow(uv.y, 2.0); // [-0.5;0.5]
 
   vec4 newPos = vec4(position, 1.0);
-  newPos.z += -oscillation;
 
   vGroundUv = ((instanceMatrix * vec4(0., 0., 0., 1.)).xz + (uGroundSize / 2.0)) / uGroundSize;
   vGroundUv.y = 1.0 - vGroundUv.y; // [0; 1]
@@ -30,10 +29,13 @@ void main()
   vec4 swipeY = texture(uDisplacementTextureY, vGroundUv); // [0; 1]
   float forceY = swipeY.g - swipeY.r; // [-1; 1]
 
-  newPos.x += forceX * uv.y;
-  newPos.z -= forceY * uv.y;
+  float oscillationFactor = 0.2;
+  newPos.x += forceX * uv.y * oscillationFactor;
 
-  oscillation = clamp(forceY + uniqueOffset, -0.5, 0.5) * pow(uv.y, 2.0);
+  oscillation += forceY * uv.y;
+  newPos.z -= oscillation * oscillationFactor;
+
+  oscillation = clamp((forceY + uniqueOffset) * (0.5 / oscillationFactor), -0.5, 0.5) * pow(uv.y, 2.0);
 
   vec4 modelPosition = modelInstanceMatrix * newPos;
   vec4 viewPosition = viewMatrix * modelPosition;
