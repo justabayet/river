@@ -52,7 +52,7 @@ function Experience(): JSX.Element {
 
       <ambientLight intensity={0.5} />
       <spotLight position={[-20, 10, 15]} intensity={100} decay={1} />
-      <Sky distance={45000} sunPosition={[0, 0.5, -1]} inclination={0} />
+      <Sky sunPosition={[2, 1, 0]} turbidity={5} rayleigh={0.1} mieCoefficient={0.002} mieDirectionalG={0.99} inclination={0.34} />
     </group>
   )
 }
