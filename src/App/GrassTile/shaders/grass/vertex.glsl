@@ -13,7 +13,7 @@ void main()
   mat4 modelInstanceMatrix = modelMatrix * instanceMatrix;
   vec3 worldPosition = vec3(modelInstanceMatrix * vec4(0., 0., 0., 1.));
 
-  float perlinValue = texture(uPerlinTexture, (worldPosition.xz + uTime) / 50.0).r; // [0;0.5]
+  float perlinValue = texture(uPerlinTexture, (worldPosition.xz + uTime) / 50.0).r / 2.0; // [0;0.5]
   float uniqueOffset = (perlinValue - 0.25) * 2.0; // [-0.5;0.5]
 
   float oscillation = uniqueOffset * pow(uv.y, 2.0); // [-0.5;0.5]
@@ -29,7 +29,7 @@ void main()
   vec4 swipeY = texture(uDisplacementTextureY, vGroundUv); // [0; 1]
   float forceY = swipeY.g - swipeY.r; // [-1; 1]
 
-  float oscillationFactor = 0.2;
+  float oscillationFactor = 0.4;
   newPos.x += forceX * uv.y * oscillationFactor;
 
   oscillation += forceY * uv.y;

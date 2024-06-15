@@ -35,7 +35,7 @@ const shaderDefault = {
   perlinTexture: null,
   groundSize: 1,
   characterPosition: new Vector2(),
-  riverWidthFactor: 5,
+  riverWidthFactor: 2.5,
   riverMinWidthFactor: 0.5,
   dryGroundElevation: 0.4,
   riverHeight: 0.2
@@ -69,6 +69,7 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
   const perlinTexture = useTexture('./perlin.png', (texture) => {
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
+    texture.colorSpace = ''
   })
 
   const {

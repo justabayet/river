@@ -3,25 +3,29 @@ import { useRef } from 'react'
 import { useCanvasTexture } from './hooks/useCanvasTexture'
 import GrassDynamic from './GrassDynamic'
 import InteractionPanel from './InteractionPanel'
-import { Vector2 } from 'three'
+import { Group, Vector2 } from 'three'
 import { drawImageX, drawImageY } from './utils/canvasUtil'
 
 interface GrassTileProps extends GroupProps {
   size?: number
+  position?: [number, number, number]
 }
 
-function GrassTile({ size = 5, ...props }: GrassTileProps): JSX.Element {
+function GrassTile({ size = 5, position, ...props }: GrassTileProps): JSX.Element {
   const previousPosition = useRef<Vector2 | null>(null)
 
   const { drawTrail: drawSwipeX, texture: textureSwipeX } = useCanvasTexture('canvas-swipe-x', { drawImage: drawImageX })
   const { drawTrail: drawSwipeY, texture: textureSwipeY } = useCanvasTexture('canvas-swipe-y', { x: 300, drawImage: drawImageY })
 
+  const groupRef = useRef<Group>(null)
+
   return (
-    <group {...props}>
+    <group position={position} {...props} ref={groupRef}>
       <GrassDynamic
         size={size}
         textureInteractionX={textureSwipeX}
-        textureInteractionY={textureSwipeY} />
+        textureInteractionY={textureSwipeY}
+        y={position && position[2]} />
 
 
       <InteractionPanel

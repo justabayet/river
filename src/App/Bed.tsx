@@ -29,7 +29,7 @@ const shaderDefault = {
   perlinTexture: null,
   groundSize: 1,
   characterPosition: new Vector2(),
-  bedWidthFactor: 5,
+  bedWidthFactor: 2.5,
   bedMinWidthFactor: 0.5,
   dryGroundElevation: 0.4,
   tileSize: 0
@@ -63,6 +63,7 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
   const perlinTexture = useTexture('./perlin.png', (texture) => {
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
+    texture.colorSpace = ''
   })
 
   const {

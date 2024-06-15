@@ -1,88 +1,68 @@
 import { InstancedMeshProps, useFrame } from '@react-three/fiber'
 import { useMemo, useState } from 'react'
-import { Quaternion, Euler, CanvasTexture, Vector3, Vector2 } from 'three'
+import { Quaternion, Euler, CanvasTexture, Vector3, Vector2, RepeatWrapping } from 'three'
 import Grass from './Grass'
+import { useTexture } from '@react-three/drei'
+import { getTextureData } from './utils/textureData'
+import { BED_SIZE, getRiverSideOffsetLeft, getRiverSideOffsetRight } from '../shaders/riverOffset'
 
 interface GrassDynamicProps extends InstancedMeshProps {
   size?: number
+  y?: number
   position?: [number, number, number]
   textureInteractionX: CanvasTexture
   textureInteractionY: CanvasTexture
 }
-let rgba: Uint8ClampedArray
 
-const img = new Image()
-img.src = './perlin.png'
-img.onload = () => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-
-  canvas.width = img.width
-  canvas.height = img.height
-
-  ctx!.drawImage(img, 0, 0)
-
-  rgba = ctx!.getImageData(
-    0, 0, img.width, img.height
-  ).data
-}
-
-function getRiverSide(y: number, x: number, seed: number): number {
-  const inputX = (y / 70)
-  const edgePerlinX = inputX / 2
-  const textureY = seed * 256 * 256
-  const textureX = (edgePerlinX % 1) * 256
-  const index = Math.floor(textureY + textureX)
-
-  const offsetFactor = (rgba[index * 4] / 255) * 5
-  const newPos = (x * offsetFactor)
-  return x * 0.5 + newPos
-}
-
-const SEED_LEFT = 0.1
-const SEED_RIGHT = 0.2
-
-function GrassDynamic({ textureInteractionX, textureInteractionY, size = 5, ...props }: GrassDynamicProps): JSX.Element {
+function GrassDynamic({ y = 0, textureInteractionX, textureInteractionY, size = 5, ...props }: GrassDynamicProps): JSX.Element {
   const boundaries: [number, number, number, number] = useMemo(() => [-size / 2, size / 2, -size / 2, size / 2], [size])
   const count = 10 * 1000
+  console.log(y)
+
+  const perlinTexture = useTexture('./perlin.png', (texture) => {
+    texture.wrapS = RepeatWrapping
+    texture.wrapT = RepeatWrapping
+    texture.colorSpace = ''
+  })
 
   const instances = useMemo(() => {
+    const textureData = getTextureData(perlinTexture)
     const instances = []
     const width = boundaries[1] - boundaries[0]
     const height = boundaries[3] - boundaries[2]
 
     for (let i = 0; i < count; i++) {
-      const bedSize = 1.25
       const positionRandom = new Vector2(Math.random(), Math.random())
-      const uv = positionRandom.clone()
-      uv.y = 1 - uv.y
-
 
       const offsetWidth = positionRandom.x * width
       const offsetHeight = positionRandom.y * height
 
-      const rotationFactor = (Math.random() - 0.5) * 1.5
+      const newX = boundaries[0] + offsetWidth
+      const newY = boundaries[2] + offsetHeight
 
-      const x = boundaries[0] + offsetWidth
-      const y = boundaries[2] + offsetHeight
+      const noGrassWidth = BED_SIZE - 0.1
 
-      const riverLeftX = 0.3 + getRiverSide(y, -bedSize / 2, SEED_LEFT)
-      const riverRightX = 2.9 - getRiverSide(y, bedSize / 2, SEED_RIGHT)
+      const riverOffsetY = - (y + newY)
 
-      const limit = 2.45
-      if (x < riverRightX && x > riverLeftX || x > limit || x < -limit) {
-        i--
+      const riverLeftX = getRiverSideOffsetLeft(riverOffsetY, (-noGrassWidth / 2), textureData)
+      const riverRightX = getRiverSideOffsetRight(riverOffsetY, (noGrassWidth / 2), textureData)
+
+      const limit = 2.5
+      if (newX < riverRightX && newX > riverLeftX ||
+        newX > limit || newX < -limit ||
+        newY > limit || newY < -limit) {
         continue
       }
 
+      const rotationFactor = (Math.random() - 0.5) * 1.5
       instances.push({
-        translation: new Vector3(x, 0, y),
+        translation: new Vector3(newX, 0, newY),
         rotation: new Quaternion().setFromEuler(new Euler(0, Math.PI * rotationFactor / 2, 0)),
         scale: new Vector3(1, 1, 1)
       })
     }
     return instances
-  }, [boundaries, count])
+  }, [boundaries, count, perlinTexture, y])
 
   const [distanceTier, setDistanceTier] = useState<number>(3)
 

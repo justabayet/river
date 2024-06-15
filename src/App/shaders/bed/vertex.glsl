@@ -20,11 +20,12 @@ varying vec2 vUv;
 float getEdgeOffset(float seed, vec2 worldUv) {
   float edgePerlinX = worldUv.y / 70.0;
   float edgePerlinY = worldUv.x / 70.0;
-
-  float offsetFactor = texture(perlinTexture, vec2((edgePerlinX + edgePerlinY) / 2.0, seed)).r
+  
+  float noiseX = (edgePerlinX + edgePerlinY) / 2.0;
+  float offsetFactor = texture(perlinTexture, vec2(noiseX, seed)).r
     * bedWidthFactor;
 
-  return (position.x * bedMinWidthFactor) - position.x + (position.x * offsetFactor);
+  return (position.x * bedMinWidthFactor) + (position.x * offsetFactor);
 }
 
 void main()
@@ -41,11 +42,15 @@ void main()
 
   float leftness = 1.0 - clamp(uv.x, 0.0, 0.5) * 2.0;
   float isLeft = step(0.5, 1.0 - uv.x);
-  newPos.x += getEdgeOffset(LEFT_EDGE_SEED, worldUv) * leftness;
+  float edgeX = getEdgeOffset(LEFT_EDGE_SEED, worldUv);
+  newPos.x -= position.x * isLeft;
+  newPos.x += edgeX * leftness;
 
   float rightness = (clamp(uv.x, 0.5, 1.0) - 0.5) * 2.0;
   float isRight = step(0.5, uv.x);
-  newPos.x += getEdgeOffset(RIGHT_EDGE_SEED, worldUv) * rightness;
+  float edgeY = getEdgeOffset(RIGHT_EDGE_SEED, worldUv);
+  newPos.x -= position.x * isRight;
+  newPos.x += edgeY * rightness;
 
   heightGroundOffset = 
     dryGroundElevation * pow(smoothstep(0.0, 1.0, leftness), 3.0) +
@@ -71,5 +76,5 @@ void main()
 
   gl_Position = projectedPosition;
   vUv = uv;
-  uPos = newPos.xyz;
+  uPos = position;
 }

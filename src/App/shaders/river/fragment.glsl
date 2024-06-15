@@ -21,7 +21,7 @@ void main()
     vec3 water = mix(depthColor, surfaceColor, heightFactor);
     vec3 foam = mix(water, white, 0.3);
 
-    float isFoam = smoothstep(0.4, 0.45, edgeness);
+    float isFoam = smoothstep(0.35, 0.45, edgeness);
     float isGround = smoothstep(0.49, 0.5, edgeness);
 
     float isMiddleFoam = smoothstep(0.45, 0.55, riddleElevation * 30.0);
