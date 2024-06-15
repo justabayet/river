@@ -15,7 +15,8 @@ void main()
     float edgeness = 0.5 + dryGroundOffset - edgeElevation;
     float heightFactor = (vPos.z + 0.1) * 5.0;
 
-    vec3 white = vec3(1.0, 1.0, 1.0);
+    vec3 white = vec3(1.0);
+    vec3 black = vec3(0.0);
     vec3 ground = mix(bedBottomColor, bedGroundColor, pow(dryGroundHeightFactor, 2.0));
 
     vec3 water = mix(depthColor, surfaceColor, heightFactor);
@@ -30,6 +31,7 @@ void main()
     vec3 color = mix(water, foam, isFoam);
     color = mix(color, foam, isMiddleFoam);
     color = mix(color, ground, isGround);
+    color = mix(color, black, 0.1);
 
     gl_FragColor = vec4(color, .8);
     // gl_FragColor = vec4(vUv, 1.0, .8);

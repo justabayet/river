@@ -7,6 +7,7 @@ uniform float uGroundSize;
 varying vec2 vUv;
 varying float vOscillation;
 varying vec2 vGroundUv;
+varying vec3 vPos;
 
 void main()
 {
@@ -45,4 +46,5 @@ void main()
 
   vUv = uv;
   vOscillation = oscillation;
+  vPos = worldPosition;
 }

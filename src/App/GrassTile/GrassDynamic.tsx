@@ -17,7 +17,6 @@ interface GrassDynamicProps extends InstancedMeshProps {
 function GrassDynamic({ y = 0, textureInteractionX, textureInteractionY, size = 5, ...props }: GrassDynamicProps): JSX.Element {
   const boundaries: [number, number, number, number] = useMemo(() => [-size / 2, size / 2, -size / 2, size / 2], [size])
   const count = 10 * 1000
-  console.log(y)
 
   const perlinTexture = useTexture('./perlin.png', (texture) => {
     texture.wrapS = RepeatWrapping

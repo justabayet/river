@@ -90,6 +90,8 @@ function Bed({ size = 5, ...props }: BedProps): JSX.Element {
 
       const distanceDelta = delta * 20.0
 
+      bedMaterial.current.characterPosition.y += distanceDelta * 0.1
+
       if (forward) {
         bedMaterial.current.characterPosition.y += distanceDelta
       } else if (backward) {

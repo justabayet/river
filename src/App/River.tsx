@@ -101,6 +101,8 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
 
       const distanceDelta = delta * 20.0
 
+      riverMaterial.current.characterPosition.y += distanceDelta * 0.1
+
       if (forward) {
         riverMaterial.current.characterPosition.y += distanceDelta
       } else if (backward) {
@@ -111,8 +113,8 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
 
 
   return (
-    <mesh {...props} rotation={[- Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[width, size, 10, 10]} />
+    <mesh {...props} rotation={[- Math.PI / 2, 0, 0]} frustumCulled={false}>
+      <planeGeometry args={[width, size, 30, 10]} />
       <riverMaterial
         ref={riverMaterial}
         perlinTexture={perlinTexture}
@@ -124,8 +126,6 @@ function River({ size = 5, ...props }: RiverProps): JSX.Element {
         dryGroundElevation={dryGroundElevation}
         bedGroundColor={bedGroundColor}
         bedBottomColor={bedBottomColor}
-        transparent
-        opacity={0.7}
       // wireframe
       />
     </mesh>
