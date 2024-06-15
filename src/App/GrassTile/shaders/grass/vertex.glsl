@@ -38,6 +38,12 @@ void main()
 
   oscillation = clamp((forceY + uniqueOffset) * (0.5 / oscillationFactor), -0.5, 0.5) * pow(uv.y, 2.0);
 
+  float topness = smoothstep(-2.5, -2.4, worldPosition.z); 
+  float bottomness = smoothstep(2.5,2.4, worldPosition.z); 
+
+  float outness = topness * bottomness;
+  newPos.y *= outness;
+
   vec4 modelPosition = modelInstanceMatrix * newPos;
   vec4 viewPosition = viewMatrix * modelPosition;
   vec4 projectedPosition = projectionMatrix * viewPosition;
