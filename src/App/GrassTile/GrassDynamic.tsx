@@ -46,10 +46,11 @@ function GrassDynamic({ y = 0, textureInteractionX, textureInteractionY, size = 
       const riverLeftX = getRiverSideOffsetLeft(riverOffsetY, (-noGrassWidth / 2), textureData)
       const riverRightX = getRiverSideOffsetRight(riverOffsetY, (noGrassWidth / 2), textureData)
 
-      const limit = 2.5
+      const limitX = 2.45
+      const limitY = 2.5
       if (newX < riverRightX && newX > riverLeftX ||
-        newX > limit || newX < -limit ||
-        newY > limit || newY < -limit) {
+        newX > limitX || newX < -limitX ||
+        newY > limitY || newY < -limitY) {
         continue
       }
 

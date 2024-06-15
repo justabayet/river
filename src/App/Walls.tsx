@@ -10,7 +10,7 @@ const color = new Color(0xff8154)
 function Walls({ size = 5, ...props }: WallsProps): JSX.Element {
   const depth = size / 20
   const height = size * 0.12
-  const posOffset = ((size + depth) / 2) + 0.02
+  const posOffset = ((size + depth) / 2)
 
   const width = size * 1.3
 
